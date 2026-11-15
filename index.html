@@ -23,4 +23,16 @@
 <div class="stage" id="stage"></div></main></div>
 <dialog id="dlg"><div id="dbody"></div></dialog>
 <script src="clinicalconfig.js"></script><script src="anatomy.js"></script><script src="importer.js"></script><script src="apps.js"></script><script src="nav.js"></script>
+<!-- Notificación flotante amarilla interactiva -->
+<div id="alert-toast-yellow"></div>
+
+<!-- Cartel central de peligro rojo -->
+<div id="danger-modal-overlay">
+  <div class="danger-card" id="danger-card-action">
+    <div class="danger-symbol">[ ! ]</div>
+    <h3 style="margin: 0 0 8px; color: var(--bad);">ALERTA CRÍTICA DE MISIÓN</h3>
+    <p id="danger-msg" style="margin: 0; font-size: 14px; color: var(--tx);">Se ha detectado un nivel de preocupación crítico en la zona afectada.</p>
+    <small style="display: block; margin-top: 12px; color: var(--mu);">Haz clic aquí para inspeccionar y resolver</small>
+  </div>
+</div>
 </body></html>
