@@ -24,6 +24,9 @@ flush(){const k=cfg(),cs=[S.crew,S.day,S.today,S.env,k.adh,k.vas,Store.ver,S.tab
  if(cs!==this.cs){renderChrome();this.cs=cs}
  if(this.isOpen)this.menu();
  this.mount(S.tab)},
+  if (typeof checkAndTriggerAlerts === "function") {
+    checkAndTriggerAlerts();
+  }
 sigNow(){const k=cfg();return[S.crew,S.day,S.today,S.env,k.adh,k.vas,Store.ver,S.cmp,S.cat,S.rl,JSON.stringify(S.sel),JSON.stringify(S.par)].join("|")},
 mount(id){const sg=this.sigNow(),st=$("stage");if(this.cur===id&&this.sig===sg)return;
  const sw=this.cur!==id;if(sw)clr(); /* desmontar: la vista anterior desaparece del DOM */
