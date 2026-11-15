@@ -214,7 +214,7 @@ const Nav = {
   },
 
   scroll(a) {
-    const el = (a && $(a)) \vert{}\vert{}$("insp") || $("regform") \vert{}\vert{} $("stage");
+    const el = (a && $(a)) || $("insp") || $("regform") || $("stage");
     el && el.scrollIntoView({ behavior: RM() ? "auto" : "smooth", block: "start" });
   },
 
@@ -274,3 +274,142 @@ const Nav = {
       this.go({
         tab: t.id,
         z: ZONES.some(q => q.id === s[1] && q.tab === t.id) ? s[1] : undefined,
+        p: s[2],
+        a: ANCH.includes(s[1]) ? s[1] : undefined
+      });
+    }
+    return true;
+  },
+
+  /* ---- menú jerárquico ---- */
+  on(l) {
+    if (l.t !== S.tab) return false;
+    if (l.z) return l.z === S.sel[layer()];
+    if (l.x && "cmp" in l.x) return !!S.cmp === !!l.x.cmp;
+    if (l.x && l.x.rl) return S.rl === l.x.rl;
+    return !!l.a && l.a === this.ca;
+  },
+
+  menu() {
+    const cur = MENU.find(g => g.tab === S.tab);
+    if (cur && this.exFor !== S.tab) {
+      this.ex.add(cur.id);
+      this.exFor = S.tab;
+    }
+
+    this.leaves = [];
+    const h = this.tree
+      .map(g => {
+        let w = -1;
+        const items = g.ks
+          .map(l => {
+            const i = this.leaves.push(l) - 1;
+            const z = l.z && ZONES.find(q => q.id === l.z);
+            const s = z ? Engine.ev(z).st : -1;
+            const on = this.on(l);
+            if (s >= 0 && s < 3) w = Math.max(w, s);
+            return `<li><button class="nl ${on ? "on" : ""}" data-nav="${i}"${
+              on ? ' aria-current="page"' : ""
+            }><span>${l.n}</span>${s >= 0 ? `<i class="t${s}" title="${SN[s]}">●</i>` : ""}</button></li>`;
+          })
+          .join("");
+        const o = this.ex.has(g.id);
+        return `<section class="ng ${o ? "open" : ""} ${g.tab === S.tab ? "cur" : ""}"><button class="ngh" data-ng="${
+          g.id
+        }" aria-expanded="${o}">${g.ic ? `<span>${g.ic}</span>` : ""}<b>${g.n}</b>${
+          w >= 0 ? `<i class="t${w}">●</i>` : ""
+        }<em>›</em></button><ul>${items}</ul></section>`;
+      })
+      .join("");
+
+    if (h !== this.mh) {
+      $("nav").innerHTML = h;
+      this.mh = h;
+    }
+  },
+
+  /* ---- drawer ---- */
+  get isOpen() {
+    return $("drawer").classList.contains("open");
+  },
+
+  open() {
+    const d = $("drawer");
+    this.menu();
+    d.removeAttribute("inert");
+    d.classList.add("open");
+    $("scrim").classList.add("on");
+    $("hb").setAttribute("aria-expanded", "true");
+    document.documentElement.classList.add("lock");
+
+    this.rf = document.activeElement;
+    const on = d.querySelector(".nl.on"),
+      f = on || d.querySelector("button");
+    f && f.focus({ preventScroll: true });
+    on && on.scrollIntoView({ block: "center" });
+  },
+
+  close() {
+    if (!this.isOpen) return;
+    const d = $("drawer");
+    d.classList.remove("open");
+    d.setAttribute("inert", "");
+    $("scrim").classList.remove("on");
+    $("hb").setAttribute("aria-expanded", "false");
+    document.documentElement.classList.remove("lock");
+    (this.rf || $("hb")).focus({ preventScroll: true });
+  },
+
+  start() {
+    this.tree = this.build();
+    $("drawer").setAttribute("inert", "");
+
+    $("drawer").addEventListener("click", e => {
+      const g = e.target.closest("[data-ng]"),
+        n = e.target.closest("[data-nav]");
+      if (g) {
+        const s = g.parentElement,
+          o = !s.classList.contains("open");
+        s.classList.toggle("open", o);
+        g.setAttribute("aria-expanded", o);
+        o ? this.ex.add(g.dataset.ng) : this.ex.delete(g.dataset.ng);
+      } else if (n) {
+        const l = this.leaves[+n.dataset.nav];
+        this.close();
+        this.go({ tab: l.t, z: l.z, p: l.p, a: l.a, ...l.x });
+      }
+    });
+
+    $("dx").onclick = () => this.close();
+
+    addEventListener("keydown", e => {
+      if (e.key === "Escape" && this.isOpen) this.close();
+    });
+
+    let x0 = null;
+    addEventListener(
+      "touchstart",
+      e => {
+        x0 = e.touches[0].clientX;
+      },
+      { passive: true }
+    );
+
+    addEventListener(
+      "touchend",
+      e => {
+        if (x0 != null && this.isOpen && e.changedTouches[0].clientX - x0 < -70) this.close();
+        x0 = null;
+      },
+      { passive: true }
+    );
+
+    addEventListener("hashchange", () => {
+      if (location.hash !== "#" + this.hash()) this.fromHash();
+    });
+
+    if (!this.fromHash()) this.flush();
+  }
+};
+
+Nav.start();
