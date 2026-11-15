@@ -256,3 +256,5 @@ function openUpload(){const t=S.today;upTarget=S.crew;
  $("upf").onchange=e=>{loadFile(e.target.files[0]);e.target.value=""};$("csvx").onclick=()=>csvExport(upTarget);$("svgx").onclick=()=>svgExport(upTarget);
  $("ups").onclick=e=>{const b=e.target.closest("[data-up]");if(!b)return;upTarget=b.dataset.up;$("ups").querySelectorAll("[data-up]").forEach(x=>x.classList.toggle("on",x===b));$("hist").innerHTML=histFor(upTarget);$("res").innerHTML=""};
  const dz=$("drop");dz.ondragover=e=>{e.preventDefault();dz.style.borderColor="var(--ac)"};dz.ondragleave=()=>dz.style.borderColor="";dz.ondrop=e=>{e.preventDefault();dz.style.borderColor="";loadFile(e.dataTransfer.files[0])}}
+Integración en el flujo existente
+Para asegurarte de que las alertas se comprueben automáticamente cada vez que se actualice la vista o se guarden datos, añade la llamada checkAndTriggerAlerts(); al final de la función principal de renderizado (render() o flush() en nav.js), o justo después de guardar un registro en saveZone().
