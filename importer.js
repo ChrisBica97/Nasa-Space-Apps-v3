@@ -130,4 +130,8 @@ function validateRows(rows, o) {
       rej.rng++;
       return;
     }
-    good.push({ c, d: r.
+    good.push({ c, d: r.d, k: r.k, v: r.v });
+  });
+
+  return { good, rej };
+}
