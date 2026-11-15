@@ -96,3 +96,77 @@ html.lock{overflow:hidden}#drawer[inert]{visibility:hidden;transition:transform 
 @media(min-width:900px){.rail>.card{width:calc((100% - 30px)/4)}}
 /* flechas del carrusel de tarjetas siempre visibles */
 .ib[data-r="cards"]{display:block}
+
+/* --- Sistema de Alertas Dinámicas --- */
+@keyframes screenFlash {
+  0% { background-color: rgba(255, 107, 107, 0.4); }
+  50% { background-color: rgba(255, 107, 107, 0.1); }
+  100% { background-color: rgba(255, 107, 107, 0.4); }
+}
+
+.screen-red-flash {
+  animation: screenFlash 0.6s ease-in-out 3;
+}
+
+/* Notificación amarilla interactiva */
+#alert-toast-yellow {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  z-index: 100;
+  background: rgba(255, 181, 71, 0.95);
+  color: #06101f;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  transform: translateY(-20px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  max-width: 320px;
+  font-size: 13px;
+  border: 1px solid #fff;
+}
+#alert-toast-yellow.on {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Cartel central rojo de peligro */
+#danger-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.8);
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+#danger-modal-overlay.on {
+  opacity: 1;
+  pointer-events: auto;
+}
+.danger-card {
+  background: #10192e;
+  border: 2px solid var(--bad);
+  border-radius: 20px;
+  padding: 24px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.danger-card:hover {
+  transform: scale(1.02);
+}
+.danger-symbol {
+  font-size: 48px;
+  color: var(--bad);
+  margin-bottom: 10px;
+  font-weight: bold;
+}
