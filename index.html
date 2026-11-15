@@ -59,4 +59,20 @@
   <!-- Sistema de Alertas Dinámicas -->
   <div id="alert-toast-yellow" role="alert" aria-live="polite"></div>
 
-  <div id="danger-modal
+  <div id="danger-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="danger-title">
+    <div class="danger-card" id="danger-card-action">
+      <div class="danger-symbol">[ ! ]</div>
+      <h3 id="danger-title" style="margin: 0 0 8px; color: var(--bad);">ALERTA CRÍTICA DE MISIÓN</h3>
+      <p id="danger-msg" style="margin: 0; font-size: 14px; color: var(--tx);">Se ha detectado un nivel de preocupación crítico en la zona afectada.</p>
+      <small style="display: block; margin-top: 12px; color: var(--mu);">Haz clic aquí para inspeccionar y resolver</small>
+      <button type="button" class="btn o sm" id="danger-close-btn" style="margin-top: 14px;">Descartar aviso</button>
+    </div>
+  </div>
+
+  <script src="clinicalconfig.js"></script>
+  <script src="anatomy.js"></script>
+  <script src="importer.js"></script>
+  <script src="apps.js"></script>
+  <script src="nav.js"></script>
+</body>
+</html>
